@@ -114,6 +114,7 @@ const loopThroughUntilGroundLevel = async (page) => {
     await waitRandomly();
     await page.waitForSelector(changeBayButton);
     await page.click(changeBayButton);
+    await waitRandomly();
   }
 }
 
