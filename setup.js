@@ -22,13 +22,13 @@ const getNodePath = () => {
 const createConfigFile = async (answers) => {
     const content = `
 export const PREFER_GROUND_LEVEL_SPOTS = ${answers.preferGroundLevelSpots};
-export const UBI_USERNAME = '${answers.username}';
-export const UBI_PASSWORD = '${answers.password}';
-export const UBI_CAR_PLATE = '${answers.carPlate}';
-export const UBI_CARPARK = '${answers.carpark}';
-export const UBI_WEBSITE_URL = '${answers.websiteUrl}';
-export const UBI_LOGIN_URL = \`\${UBI_WEBSITE_URL}/Account/Login?ReturnUrl=%2F\`;
-export const UBI_BOOK_URL = \`\${UBI_WEBSITE_URL}/BookNow\`;
+export const SAUSAGE_VAN_USERNAME = '${answers.username}';
+export const SAUSAGE_VAN_PASSWORD = '${answers.password}';
+export const SAUSAGE_VAN_CAR_PLATE = '${answers.carPlate}';
+export const SAUSAGE_VAN_CARPARK = '${answers.carpark}';
+export const SAUSAGE_VAN_WEBSITE_URL = '${answers.websiteUrl}';
+export const SAUSAGE_VAN_LOGIN_URL = \`\${SAUSAGE_VAN_WEBSITE_URL}/Account/Login?ReturnUrl=%2F\`;
+export const SAUSAGE_VAN_BOOK_URL = \`\${SAUSAGE_VAN_WEBSITE_URL}/BookNow\`;
 `;
 
     fs.writeFileSync(configPath, content);
@@ -52,8 +52,8 @@ const createPlistFile = async (answers) => {
             Weekday: answers.weekday,
         }],
         WorkingDirectory: process.cwd(),
-        StandardErrorPath: `${process.env.PATH}/logs/err.log`,
-        StandardOutPath: `${process.env.PATH}/logs/out.log`
+        StandardErrorPath: `${process.cwd()}/logs/err.log`,
+        StandardOutPath: `${process.cwd()}/logs/out.log`
     };
 
     const content = plist.build(plistObject);
@@ -92,14 +92,21 @@ const questions = [
     {
         type: 'input',
         name: 'carpark',
-        message: 'Enter the carpark name:',
+        message: 'Enter the carpark name (exact name):',
         validate: (input) => !!input.trim() || 'Please provide a valid carpark name.',
     },
     {
         type: 'input',
         name: 'websiteUrl',
-        message: 'Enter the website URL:',
-        validate: (input) => !!input.trim() || 'Please provide a valid website URL.',
+        message: 'Enter the booking website URL (starting with https):',
+        validate: (input) => {
+            const urlRegex = /^(https):\/\/[^ "]+$/;
+            if (!urlRegex.test(input.trim())) {
+                return 'Please provide a valid website URL.';
+            }
+            return true;
+        },
+        filter: (input) => input.trim().replace(/\/$/, ''),
     },
     {
         type: 'confirm',
@@ -113,20 +120,25 @@ const questions = [
         name: 'hour',
         message: 'Enter the hour of the day to run the script (0-23):',
         validate: (input) => !isNaN(parseInt(input)) && parseInt(input) >= 0 && parseInt(input) <= 23 || 'Please provide a valid hour.',
-        transformer: (input) => parseInt(input),
+        transformer: (input) => input.trim().length > 0 ? parseInt(input) : '',
+        default: '0',
     },
     {
         type: 'input',
         name: 'minute',
         message: 'Enter the minute of the hour to run the script (0-59):',
         validate: (input) => !isNaN(parseInt(input)) && parseInt(input) >= 0 && parseInt(input) <= 59 || 'Please provide a valid minute.',
-        transformer: (input) => parseInt(input),
+        transformer: (input) => input.trim().length > 0 ? parseInt(input) : '',
+        default: '10',
     },
 ];
 
 (async () => {
+    console.log(`\n\n\n----------------------------------------------------------------`);
+    console.log('🅿️  Welcome to the Sausage Van 🌭 Carpark Booking Setup Wizard 🅿️');
+    console.log('----------------------------------------------------------------\n\n');
     const answers = await inquirer.prompt(questions);
     await createConfigFile(answers);
     await createPlistFile(answers);
-    console.log('Configuration and plist file created successfully.');
+    console.log('Task scheduled. Please log out (or reboot) and log back in to enable the task.');
 })();

@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import {
-  PREFER_GROUND_LEVEL_SPOTS, UBI_BOOK_URL, UBI_CARPARK,
-  UBI_CAR_PLATE, UBI_LOGIN_URL, UBI_PASSWORD, UBI_USERNAME
+  PREFER_GROUND_LEVEL_SPOTS, SAUSAGE_VAN_BOOK_URL, SAUSAGE_VAN_CARPARK,
+  SAUSAGE_VAN_CAR_PLATE, SAUSAGE_VAN_LOGIN_URL, SAUSAGE_VAN_PASSWORD, SAUSAGE_VAN_USERNAME
 } from
   './config.js';
 
@@ -33,15 +33,15 @@ const clearInput = async (page, selector) => {
 const performLogin = async (page) => {
   console.log('Perform Login ...');
 
-  await page.goto(UBI_LOGIN_URL);
+  await page.goto(SAUSAGE_VAN_LOGIN_URL);
 
   const emailInput = '#Email';
   const passwordInput = '#Password';
 
-  await page.type(emailInput, UBI_USERNAME);
+  await page.type(emailInput, SAUSAGE_VAN_USERNAME);
   await waitRandomly();
 
-  await page.type(passwordInput, UBI_PASSWORD);
+  await page.type(passwordInput, SAUSAGE_VAN_PASSWORD);
   await waitRandomly();
 
   const loginButton = '.k-primary';
@@ -53,13 +53,13 @@ const performLogin = async (page) => {
 
 const bookParking = async (page) => {
   console.log('Book Parking ...');
-  await page.goto(UBI_BOOK_URL);
+  await page.goto(SAUSAGE_VAN_BOOK_URL);
   await waitRandomly();
 
   await clickNonButtonElement(page, 'text/Select Car Park...');
   await waitRandomly();
 
-  await clickNonButtonElement(page, `text/${UBI_CARPARK}`);
+  await clickNonButtonElement(page, `text/${SAUSAGE_VAN_CARPARK}`);
   await waitRandomly();
 
   const datePickerInput = '#FromDatePicker';
@@ -71,7 +71,7 @@ const bookParking = async (page) => {
   const licenseInput = '.licensePlate';
   await clearInput(page, licenseInput);
   await waitRandomly();
-  await page.type(licenseInput, UBI_CAR_PLATE);
+  await page.type(licenseInput, SAUSAGE_VAN_CAR_PLATE);
   await waitRandomly();
 
   const registerButton = '#register-button';

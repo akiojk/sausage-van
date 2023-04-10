@@ -1,19 +1,23 @@
 {
-  "name": "ubi",
+  "name": "sausage-van",
   "version": "1.0.0",
   "description": "",
   "main": "carpark.js",
   "scripts": {
     "start": "node carpark.js",
-    "config-setup": "pnpm install && node setup.js"
+    "config:setup": "pnpm install && node setup.js",
+    "config:remove": "rimraf ~/Library/LaunchAgents/io.ak.parking.book.plist"
   },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^19.7.4",
     "inquirer": "^9.1.5",
-    "plist": "^3.0.6"
+    "plist": "^3.0.6",
+    "puppeteer": "^19.7.4"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0"
   }
 }
