@@ -46,11 +46,11 @@ const createPlistFile = async (answers) => {
             `${process.cwd()}/carpark.js`
         ],
         RunAtLoad: false,
-        StartCalendarInterval: [{
+        StartCalendarInterval: answers.weekdays.map((weekday) => ({
             Hour: parseInt(answers.hour),
             Minute: parseInt(answers.minute),
-            Weekday: answers.weekday,
-        }],
+            Weekday: weekday,
+        })),
         WorkingDirectory: process.cwd(),
         StandardErrorPath: `${process.cwd()}/logs/err.log`,
         StandardOutPath: `${process.cwd()}/logs/out.log`
@@ -114,7 +114,7 @@ const questions = [
         message: 'Do you prefer ground-level parking spots?',
         default: true,
     },
-    { type: 'list', name: 'weekday', message: 'Select the day of the week to run the script:', choices: weekdayOptions },
+    { type: 'checkbox', name: 'weekdays', message: 'Select the day of the week to run the script:', choices: weekdayOptions },
     {
         type: 'input',
         name: 'hour',
